@@ -1,14 +1,8 @@
 package guru.nidi.jwtspring;
 
-import com.jayway.jsonpath.JsonPath;
-import guru.nidi.jwtspring.controller.AuthenticationRequest;
 import org.junit.Test;
-import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,7 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DirtiesContext
 public class AuthenticationTest extends AbstractMvcTest {
     @Override
     protected void doInit() throws Exception {
@@ -55,19 +48,5 @@ public class AuthenticationTest extends AbstractMvcTest {
         return mockMvc.perform(
                 post("/api/users")
                         .content("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}"));
-    }
-
-    private ResultActions login(String username, String password) throws Exception {
-        final AuthenticationRequest auth = new AuthenticationRequest();
-        auth.setUsername(username);
-        auth.setPassword(password);
-        return mockMvc.perform(
-                post("/api/public/login")
-                        .content(json(auth))
-                        .contentType(MediaType.APPLICATION_JSON));
-    }
-
-    private String extractToken(MvcResult result) throws UnsupportedEncodingException {
-        return JsonPath.read(result.getResponse().getContentAsString(), "$.token");
     }
 }
